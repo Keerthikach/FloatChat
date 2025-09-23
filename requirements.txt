@@ -1,0 +1,31 @@
+xarray
+netCDF4
+pandas
+matplotlib
+# Database
+psycopg2-binary
+SQLAlchemy
+
+# Vector DB
+chromadb
+sentence-transformers
+
+# Data processing
+xarray
+netCDF4
+numpy
+pandas
+
+# Visualization (later for dashboard)
+matplotlib
+plotly
+
+# Web framework (for PoC dashboard/chatbot later)
+streamlit
+
+# Utils
+
+langchain
+langchain-community
+langchain-ollama
+
