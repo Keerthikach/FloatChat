@@ -1,19 +1,42 @@
-from rag.chain import build_chain
+# main.py
+from __future__ import annotations
+from typing import Any, Dict
+from .chain import build_chain, complete_from_mcp
 
-def run_chat():
-    qa_chain = build_chain()
-    
+
+def run_chat() -> None:
+    """
+    Simple CLI to test: model returns ONLY SQL based on your question + retrieved context.
+    """
+    qa = build_chain()
+
     while True:
-        query = input("You: ")
-        if query.lower() in ["exit", "quit"]:
+        try:
+            query = input("You: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
             break
-        
-        result = qa_chain.invoke({"query": query})
-        print("\nAssistant:", result["result"])
-        
-        print("\n--- Sources ---")
-        for doc in result["source_documents"]:
+
+        if not query:
+            continue
+        if query.lower() in {"exit", "quit"}:
+            break
+
+        # For CLI we don't add filters; MCP path uses complete_from_mcp
+        out = qa.invoke({"query": query})
+        print("\nSQL:")
+        print(out["result"])
+
+        print("\n--- Sources (metadata) ---")
+        for doc in out.get("source_documents", []):
             print(doc.metadata)
+        print()
+
+
+def complete(mcp_payload: Dict[str, Any]) -> Dict[str, Any]:
+    """Callable from your MCP server if you import this module."""
+    return complete_from_mcp(mcp_payload)
+
 
 if __name__ == "__main__":
     run_chat()
